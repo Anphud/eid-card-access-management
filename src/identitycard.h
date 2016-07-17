@@ -2,8 +2,8 @@
 #include <string>
 
 // Predefinitions
-class IdentityCard;
-typedef void(*CardReaderInsertedEvent)(IdentityCard*);
+struct IdentityCard;
+typedef void(*CardReaderInsertedEvent)(IdentityCard);
 typedef void(*CardReaderPulledEvent)();
 
 // Card propertes
@@ -61,8 +61,8 @@ public:
 	~CardReader();
 	static CardReader* Create(CK_FUNCTION_LIST_PTR f, CK_SESSION_HANDLE ses);
 	static CardReader* GetInstance();
-	static void SetCard(IdentityCard*);
-	static IdentityCard* GetCard();
+	void SetCard(IdentityCard*);
+	IdentityCard* GetCard();
 
 	CK_FUNCTION_LIST_PTR GetReaderFunctions() { return m_pFunctions; }
 	CK_SESSION_HANDLE GetSessionHandle() { return m_Session; }

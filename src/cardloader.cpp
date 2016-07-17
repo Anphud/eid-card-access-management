@@ -8,13 +8,14 @@ CardReaderInsertedEvent CardReader::m_CardReader_CardInsertedEvent = NULL;
 CardReaderPulledEvent CardReader::m_CardReader_CardPulledEvent = NULL;
 CardReader* CardReader::m_Instance = nullptr;
 
+extern int gIsCardInserted;
+
 void loadCard(CK_FUNCTION_LIST_PTR f, CK_SESSION_HANDLE ses)
 {
 	CardReader* reader = CardReader::Create(f, ses);
-	IdentityCard * card = new IdentityCard();
-	reader->SetCard(card);
+	IdentityCard* card = reader->GetCard();
 	CardReaderInsertedEvent event = CardReader::GetCardInsertedEvent();
-	if (event) event(card);
+	if (event) event(*card);
 }
 
 void destroyReader()
@@ -85,14 +86,19 @@ void CardReader::SetCard(IdentityCard* card)
 	reader->m_IdentityCard = card;
 }
 
-IdentityCard* CardReader::GetCard() { return CardReader::GetInstance()->m_IdentityCard; }
+IdentityCard* CardReader::GetCard() 
+{
+	if (!m_IdentityCard) m_IdentityCard = new IdentityCard();
+	return m_IdentityCard; 
+}
+
 void CardReader::SetCardInsertedEvent(CardReaderInsertedEvent p) { m_CardReader_CardInsertedEvent = p; }
 void CardReader::SetCardPulledEvent(CardReaderPulledEvent p) { m_CardReader_CardPulledEvent = p; }
 
 void cardPulled() 
 {
 	CardReader* reader = CardReader::GetInstance();
-	CardReader::SetCard(nullptr);
+	reader->SetCard(nullptr);
 	CardReaderPulledEvent event = reader->GetCardPulledEvent();
 	if (event) event();
 }
