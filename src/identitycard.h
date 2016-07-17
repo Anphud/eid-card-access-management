@@ -1,3 +1,4 @@
+#pragma once
 #include "base.h"
 #include <string>
 
@@ -18,6 +19,7 @@ public:
 	std::string ToString() { return data; }
 	const char* ToCString() { return data.c_str(); }
 	std::string Info() { return std::string(propertyLabel).append(": ").append(data); }
+	size_t Length() { return data.size(); }
 };
 
 struct IdentityFile
@@ -45,7 +47,7 @@ struct Address
 
 struct Photo
 {
-	CardProperty photo = CardProperty("photo");
+	CardProperty photo = CardProperty("PHOTO_FILE");
 };
 
 struct IdentityCard

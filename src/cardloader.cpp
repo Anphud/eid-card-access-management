@@ -31,8 +31,9 @@ CardProperty::CardProperty(const char* propertyName) :
 	CK_ULONG valueLength = 0;
 
 	CardReader* reader = CardReader::GetInstance();
+	if (!reader) return;
+
 	int retVal = Beidsdk_GetObjectValue(reader->GetReaderFunctions(), reader->GetSessionHandle(), (CK_CHAR_PTR)propertyName, (CK_VOID_PTR*)&pValue, &valueLength);
-	
 	if (retVal == CKR_OK)
 	{
 		data.resize(valueLength);
